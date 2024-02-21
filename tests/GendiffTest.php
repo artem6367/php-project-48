@@ -3,13 +3,14 @@
 namespace hexlet\code\tests;
 
 use PHPUnit\Framework\TestCase;
+
 use function hexlet\code\gendiff;
 
 class GendiffTest extends TestCase
 {
-    public function testGenddiff1()
+    public function testGenddiff(): void
     {
-        $actual = gendiff(__DIR__ . '/data/file1.json', 'tests/data/file2.json');
+        $actual = gendiff(__DIR__ . '/fixtures/file1.json', 'tests/fixtures/file2.json');
         $expected = "{\n"
             . "  - follow: false\n"
             . "    host: hexlet.io\n"

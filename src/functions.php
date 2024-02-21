@@ -2,18 +2,24 @@
 
 namespace hexlet\code;
 
-function gendiff($file1, $file2)
+function gendiff(string $file1, string $file2): string
 {
-    if (mb_strpos($file1, '/') !== 0) {
-        $file1 = getcwd() . '/' . $file1;
+    $file1 = realpath($file1);
+    $file2 = realpath($file2);
+
+    if ($file1 === false || $file2 === false) {
+        return 'Файлы не найдены';
     }
 
-    if (mb_strpos($file2, '/') !== 0) {
-        $file2 = getcwd() . '/' . $file2;
+    $content1 = file_get_contents($file1);
+    $content2 = file_get_contents($file2);
+
+    if ($content1 === false || $content2 === false) {
+        return 'Не удалось считать файлы';
     }
 
-    $json1 = json_decode(file_get_contents($file1), true);
-    $json2 = json_decode(file_get_contents($file2), true);
+    $json1 = json_decode($content1, true);
+    $json2 = json_decode($content2, true);
 
     $keys = array_unique([...array_keys($json1), ...array_keys($json2)]);
     sort($keys);
