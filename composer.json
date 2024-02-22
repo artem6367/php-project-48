@@ -9,7 +9,8 @@
             "hexlet\\code\\": "src/"
         },
         "files": [
-            "src/functions.php"
+            "src/functions.php",
+            "src/Parsers.php"
         ]
     },
     "autoload-dev": {
@@ -19,7 +20,8 @@
     },
     "require": {
         "phpstan/phpstan": "^1.10",
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "symfony/yaml": "^5.4"
     },
     "require-dev": {
         "psy/psysh": "^0.12.0",
