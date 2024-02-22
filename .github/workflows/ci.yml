@@ -11,8 +11,14 @@ jobs:
       - name: Composer install
         run: composer install
 
-      - name: Run unit tests
-        run: make test
-
       - name: Run linter
         run: make lint
+
+      - name: Run test & publish code coverage
+        uses: paambaati/codeclimate-action@v5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: make test-coverage
+          coverageLocations: build/logs/clover.xml:clover
+          debug: true
