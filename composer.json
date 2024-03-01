@@ -10,7 +10,8 @@
         },
         "files": [
             "src/functions.php",
-            "src/Parsers.php"
+            "src/Parsers.php",
+            "src/Formaters.php"
         ]
     },
     "autoload-dev": {

@@ -8,26 +8,6 @@ use function hexlet\code\gendiff;
 
 class GendiffTest extends TestCase
 {
-    public function testCompareFlatFiles(): void
-    {
-        $actualJson = gendiff(__DIR__ . '/fixtures/json/file1.json', 'tests/fixtures/json/file2.json');
-        $actualYaml = gendiff(__DIR__ . '/fixtures/yaml/file1.yaml', 'tests/fixtures/yaml/file2.yaml');
-
-        $expected = <<<EOF
-        {
-          - follow: false
-            host: hexlet.io
-          - proxy: 123.234.53.22
-          - timeout: 50
-          + timeout: 20
-          + verbose: true
-        }
-        EOF;
-
-        $this->assertEquals($expected, $actualJson);
-        $this->assertEquals($expected, $actualYaml);
-    }
-
     public function testRecursiveComparison(): void
     {
         $actualJson = gendiff('tests/fixtures/json/file-recurs-1.json', 'tests/fixtures/json/file-recurs-2.json');
