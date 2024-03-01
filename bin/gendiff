@@ -28,5 +28,5 @@ DOC;
 
 $args = Docopt::handle($doc, ['version' => 'Generate diff 1.0']);
 
-echo gendiff($args['<firstFile>'], $args['<secondFile>']);
+echo gendiff($args['<firstFile>'], $args['<secondFile>'], $args['--format']);
 echo PHP_EOL;
