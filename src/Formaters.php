@@ -15,7 +15,7 @@ function format(array $data, string $formatName = 'stylish'): string
             return stylish($data);
         case 'plain':
             return plain($data);
-        case'json';
+        case 'json';
             return json($data);
         default:
             throw new Exception('Unknown format ' . $formatName);
