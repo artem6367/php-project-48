@@ -39,7 +39,7 @@ function getDiff(array $data1, array $data2): array
             } else {
                 $diff["+ $key"] = $val2;
             }
-        } elseif ($val1 != $val2) {
+        } elseif ($val1 !== $val2) {
             if (is_array($val1) && is_array($val2)) {
                 $diff["  $key"] = getDiff($val1, $val2);
             } elseif (is_array($val1)) {

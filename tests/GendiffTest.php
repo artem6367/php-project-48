@@ -33,6 +33,8 @@ class GendiffTest extends TestCase
                     key: value
                   + ops: vops
                 }
+              - setting7: 0
+              + setting7: null
             }
             group1: {
               - baz: bas
@@ -79,6 +81,7 @@ class GendiffTest extends TestCase
         Property 'common.setting5' was added with value: [complex value]
         Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
         Property 'common.setting6.ops' was added with value: 'vops'
+        Property 'common.setting7' was updated. From 0 to null
         Property 'group1.baz' was updated. From 'bas' to 'bars'
         Property 'group1.nest' was updated. From [complex value] to 'str'
         Property 'group2' was removed
@@ -114,7 +117,9 @@ class GendiffTest extends TestCase
                     ],
                     '  key' => 'value',
                     '+ ops' => 'vops'
-                ]
+                ],
+                '- setting7' => 0,
+                '+ setting7' => 'null'
             ],
             '  group1' => [
                 '- baz' => 'bas',

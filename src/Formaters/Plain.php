@@ -56,7 +56,7 @@ function normalize(string $value): string
     if ($value == '') {
         return "''";
     }
-    if (!in_array($value, ['true', 'false', 'null', '[complex value]'], true)) {
+    if (!in_array($value, ['true', 'false', 'null', '[complex value]', '0'], true)) {
         return "'$value'";
     }
 
