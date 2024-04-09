@@ -12,8 +12,8 @@ function format(array $data): string
         $action = $value['action'];
         $newValue = normalize($value['newValue'] ?? $value['value']);
         $oldValue = normalize($value['oldValue'] ?? '');
-        $acc[] = getFormatedString($action, $key, $oldValue, $newValue);
-        return $acc;
+        $item = getFormatedString($action, $key, $oldValue, $newValue);
+        return array_merge($acc, [$item]);
     }, []);
 
     return implode(PHP_EOL, $str);
@@ -23,26 +23,18 @@ function helper(array $data, string $parent = ''): array
 {
     $keys = array_keys($data);
     $result = array_reduce($keys, function ($acc, $key) use ($data, $parent) {
+        $newAcc = $acc;
         $value = $data[$key];
         $reportValue = is_array($value) ? '[complex value]' : $value;
-        $newParent = (!empty($parent) ? "{$parent}." : '') . mb_substr($key, 2);
-        if (mb_strpos($key, '- ') === 0) {
-            $acc[$newParent] = ['action' => 'removed', 'value' => $reportValue];
-        } elseif (mb_strpos($key, '+ ') === 0) {
-            if (array_key_exists($newParent, $acc)) {
-                $acc[$newParent] = [
-                    'action' => 'updated',
-                    'oldValue' => $acc[$newParent]['value'],
-                    'newValue' => $reportValue,
-                ];
-            } else {
-                $acc[$newParent] = ['action' => 'added', 'value' => $reportValue];
-            }
+        $newParent = ($parent !== '' ? "{$parent}." : '') . mb_substr($key, 2);
+        $item = getItem($newAcc, $key, $reportValue, $newParent);
+        if (count($item) > 0) {
+            $newAcc[$newParent] = $item;
         }
         if (is_array($value)) {
-            $acc = array_merge($acc, helper($value, $newParent));
+            return array_merge($newAcc, helper($value, $newParent));
         }
-        return $acc;
+        return $newAcc;
     }, []);
 
     return $result;
@@ -72,4 +64,23 @@ function getFormatedString(string $action, string $key, string $oldValue, string
         default:
             return '';
     }
+}
+
+function getItem(array $acc, string $key, string $reportValue, string $newParent): array
+{
+    if (mb_strpos($key, '- ') === 0) {
+        return ['action' => 'removed', 'value' => $reportValue];
+    } elseif (mb_strpos($key, '+ ') === 0) {
+        if (array_key_exists($newParent, $acc)) {
+            return [
+                'action' => 'updated',
+                'oldValue' => $acc[$newParent]['value'],
+                'newValue' => $reportValue,
+            ];
+        } else {
+            return ['action' => 'added', 'value' => $reportValue];
+        }
+    }
+
+    return [];
 }
