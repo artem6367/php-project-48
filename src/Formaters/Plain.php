@@ -12,13 +12,7 @@ function format(array $data): string
         $action = $value['action'];
         $newValue = normalize($value['newValue'] ?? $value['value']);
         $oldValue = normalize($value['oldValue'] ?? '');
-        if ($action === 'removed') {
-            $acc[] = "Property '$key' was removed";
-        } elseif ($action === 'updated') {
-            $acc[] = "Property '$key' was updated. From $oldValue to $newValue";
-        } else {
-            $acc[] = "Property '$key' was added with value: $newValue";
-        }
+        $acc[] = getFormatedString($action, $key, $oldValue, $newValue);
         return $acc;
     }, []);
 
@@ -64,4 +58,18 @@ function normalize(string $value): string
     }
 
     return $value;
+}
+
+function getFormatedString(string $action, string $key, string $oldValue, string $newValue): string
+{
+    switch ($action) {
+        case 'removed':
+            return "Property '$key' was removed";
+        case 'updated':
+            return "Property '$key' was updated. From $oldValue to $newValue";
+        case 'added':
+            return "Property '$key' was added with value: $newValue";
+        default:
+            return '';
+    }
 }
