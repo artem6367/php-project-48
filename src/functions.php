@@ -18,31 +18,33 @@ function gendiff(string $file1, string $file2, string $formatName = 'stylish'): 
 function getDiff(array $data1, array $data2): array
 {
     $keys = array_unique([...array_keys($data1), ...array_keys($data2)]);
-    sort($keys);
+    $sortedKeys = collect($keys)->sort()->values()->all();
 
-    $result = array_reduce($keys, function ($diff, $key) use ($data1, $data2) {
+    $result = array_reduce($sortedKeys, function ($diff, $key) use ($data1, $data2) {
         $val1 = getValueString($data1[$key] ?? null);
         $val2 = getValueString($data2[$key] ?? null);
 
         if (array_key_exists($key, $data1) && !array_key_exists($key, $data2)) {
-            $diff["- $key"] = is_array($val1) ? getDiff($val1, $val1) : $val1;
+            return array_merge($diff, ["- $key" => is_array($val1) ? getDiff($val1, $val1) : $val1]);
         } elseif (!array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
-            $diff["+ $key"] = is_array($val2) ? getDiff($val2, $val2) : $val2;
+            return array_merge($diff, ["+ $key" => is_array($val2) ? getDiff($val2, $val2) : $val2]);
         } elseif ($val1 !== $val2) {
             if (is_array($val1) && is_array($val2)) {
-                $diff["  $key"] = getDiff($val1, $val2);
+                return array_merge($diff, ["  $key" => getDiff($val1, $val2)]);
             } else {
-                $diff["- $key"] = is_array($val1) ? getDiff($val1, $val1) : $val1;
-                $diff["+ $key"] = is_array($val2) ? getDiff($val2, $val2) : $val2;
+                return array_merge(
+                    $diff,
+                    ["- $key" => is_array($val1) ? getDiff($val1, $val1) : $val1],
+                    ["+ $key" => is_array($val2) ? getDiff($val2, $val2) : $val2]
+                );
             }
         } else {
             if (is_array($val1) && is_array($val2)) {
-                $diff["  $key"] = getDiff($val1, $val2);
+                return array_merge($diff, ["  $key" => getDiff($val1, $val2)]);
             } else {
-                $diff["  $key"] = $val1;
+                return array_merge($diff, ["  $key" => $val1]);
             }
         }
-        return $diff;
     }, []);
 
     return $result;

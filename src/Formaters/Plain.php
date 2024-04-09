@@ -23,18 +23,17 @@ function helper(array $data, string $parent = ''): array
 {
     $keys = array_keys($data);
     $result = array_reduce($keys, function ($acc, $key) use ($data, $parent) {
-        $newAcc = $acc;
         $value = $data[$key];
         $reportValue = is_array($value) ? '[complex value]' : $value;
         $newParent = ($parent !== '' ? "{$parent}." : '') . mb_substr($key, 2);
-        $item = getItem($newAcc, $key, $reportValue, $newParent);
+        $item = getItem($acc, $key, $reportValue, $newParent);
         if (count($item) > 0) {
-            $newAcc[$newParent] = $item;
+            return array_merge($acc, [$newParent => $item]);
         }
         if (is_array($value)) {
-            return array_merge($newAcc, helper($value, $newParent));
+            return array_merge($acc, helper($value, $newParent));
         }
-        return $newAcc;
+        return $acc;
     }, []);
 
     return $result;

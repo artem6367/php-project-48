@@ -28,7 +28,8 @@
     "require": {
         "phpstan/phpstan": "^1.10",
         "docopt/docopt": "^1.0",
-        "symfony/yaml": "^5.4"
+        "symfony/yaml": "^5.4",
+        "illuminate/collections": "^8.83"
     },
     "require-dev": {
         "psy/psysh": "^0.12.0",
