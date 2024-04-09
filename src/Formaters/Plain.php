@@ -5,31 +5,33 @@ namespace Differ\Differ\Formaters\Plain;
 function format(array $data): string
 {
     $result = helper($data);
-    $str = [];
-    foreach ($result as $key => $value) {
+    $keys = array_keys($result);
+
+    $str = array_reduce($keys, function ($str, $key) use ($result) {
+        $value = $result[$key];
         $action = $value['action'];
-        $newValue = $value['newValue'] ?? $value['value'];
-        $newValue = normalize($newValue);
+        $newValue = normalize($value['newValue'] ?? $value['value']);
         $oldValue = normalize($value['oldValue'] ?? '');
-        if ($action == 'removed') {
+        if ($action === 'removed') {
             $str[] = "Property '$key' was removed";
-        } elseif ($action == 'updated') {
+        } elseif ($action === 'updated') {
             $str[] = "Property '$key' was updated. From $oldValue to $newValue";
         } else {
             $str[] = "Property '$key' was added with value: $newValue";
         }
-    }
+        return $str;
+    }, []);
 
     return implode(PHP_EOL, $str);
 }
 
 function helper(array $data, string $parent = ''): array
 {
-    $result = [];
-
-    foreach ($data as $key => $value) {
+    $keys = array_keys($data);
+    $result = array_reduce($keys, function ($result, $key) use ($data, $parent) {
+        $value = $data[$key];
         $reportValue = is_array($value) ? '[complex value]' : $value;
-        $newParent = ($parent ? $parent . '.' : '') . mb_substr($key, 2);
+        $newParent = ($parent ? "{$parent}." : '') . mb_substr($key, 2);
         if (mb_strpos($key, '- ') === 0) {
             $result[$newParent] = ['action' => 'removed', 'value' => $reportValue];
         } elseif (mb_strpos($key, '+ ') === 0) {
@@ -46,7 +48,8 @@ function helper(array $data, string $parent = ''): array
         if (is_array($value)) {
             $result = array_merge($result, helper($value, $newParent));
         }
-    }
+        return $result;
+    }, []);
 
     return $result;
 }

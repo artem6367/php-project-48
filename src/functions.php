@@ -21,36 +21,19 @@ function getDiff(array $data1, array $data2): array
     sort($keys);
 
     $result = array_reduce($keys, function ($diff, $key) use ($data1, $data2) {
-        $val1 = $data1[$key] ?? null;
-        $val1 = getValueString($val1);
-
-        $val2 = $data2[$key] ?? null;
-        $val2 = getValueString($val2);
+        $val1 = getValueString($data1[$key] ?? null);
+        $val2 = getValueString($data2[$key] ?? null);
 
         if (array_key_exists($key, $data1) && !array_key_exists($key, $data2)) {
-            if (is_array($val1)) {
-                $diff["- $key"] = getDiff($val1, $val1);
-            } else {
-                $diff["- $key"] = $val1;
-            }
+            $diff["- $key"] = is_array($val1) ? getDiff($val1, $val1) : $val1;
         } elseif (!array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
-            if (is_array($val2)) {
-                $diff["+ $key"] = getDiff($val2, $val2);
-            } else {
-                $diff["+ $key"] = $val2;
-            }
+            $diff["+ $key"] = is_array($val2) ? getDiff($val2, $val2) : $val2;
         } elseif ($val1 !== $val2) {
             if (is_array($val1) && is_array($val2)) {
                 $diff["  $key"] = getDiff($val1, $val2);
-            } elseif (is_array($val1)) {
-                $diff["- $key"] = getDiff($val1, $val1);
-                $diff["+ $key"] = $val2;
-            } elseif (is_array($val2)) {
-                $diff["- $key"] = $val1;
-                $diff["+ $key"] = getDiff($val2, $val2);
             } else {
-                $diff["- $key"] = $val1;
-                $diff["+ $key"] = $val2;
+                $diff["- $key"] = is_array($val1) ? getDiff($val1, $val1) : $val1;
+                $diff["+ $key"] = is_array($val2) ? getDiff($val2, $val2) : $val2;
             }
         } else {
             if (is_array($val1) && is_array($val2)) {
