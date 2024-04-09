@@ -1,12 +1,12 @@
 <?php
 
-namespace hexlet\code;
+namespace Differ\Differ;
 
 use Exception;
 
-use function hexlet\code\Formaters\Stylish\format as stylish;
-use function hexlet\code\Formaters\Plain\format as plain;
-use function hexlet\code\Formaters\Json\format as json;
+use function Differ\Differ\Formaters\Stylish\format as stylish;
+use function Differ\Differ\Formaters\Plain\format as plain;
+use function Differ\Differ\Formaters\Json\format as json;
 
 function format(array $data, string $formatName = 'stylish'): string
 {

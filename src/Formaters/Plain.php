@@ -1,6 +1,6 @@
 <?php
 
-namespace hexlet\code\Formaters\Plain;
+namespace Differ\Differ\Formaters\Plain;
 
 function format(array $data): string
 {

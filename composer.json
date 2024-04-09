@@ -1,12 +1,12 @@
 {
-    "name": "hexlet/code",
+    "name": "differ/differ",
     "type": "project",
     "scripts": {
         "test": "phpunit tests"
     },
     "autoload": {
         "psr-4": {
-            "hexlet\\code\\": "src/"
+            "differ\\differ\\": "src/"
         },
         "files": [
             "src/functions.php",
@@ -19,7 +19,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "hexlet\\code\\tests\\": "tests/"
+            "differ\\differ\\tests\\": "tests/"
         }
     },
     "require": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace hexlet\code\Formaters\Json;
+namespace Differ\Differ\Formaters\Json;
 
 function format(array $data): string
 {

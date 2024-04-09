@@ -1,6 +1,6 @@
 <?php
 
-namespace hexlet\code\Formaters\Stylish;
+namespace Differ\Differ\Formaters\Stylish;
 
 function format(array $data, string $separator = ' ', int $depth = 0): string
 {
