@@ -20,24 +20,12 @@ function getDiff(array $data1, array $data2): array
     $keys = array_unique([...array_keys($data1), ...array_keys($data2)]);
     sort($keys);
 
-    $diff = [];
-
-    foreach ($keys as $key) {
+    $result = array_reduce($keys, function ($diff, $key) use ($data1, $data2) {
         $val1 = $data1[$key] ?? null;
-        if (is_bool($val1)) {
-            $val1 = $val1 ? 'true' : 'false';
-        }
-        if ($val1 === null) {
-            $val1 = 'null';
-        }
+        $val1 = getValueString($val1);
 
         $val2 = $data2[$key] ?? null;
-        if (is_bool($val2)) {
-            $val2 = $val2 ? 'true' : 'false';
-        }
-        if ($val2 === null) {
-            $val2 = 'null';
-        }
+        $val2 = getValueString($val2);
 
         if (array_key_exists($key, $data1) && !array_key_exists($key, $data2)) {
             if (is_array($val1)) {
@@ -54,10 +42,10 @@ function getDiff(array $data1, array $data2): array
         } elseif ($val1 != $val2) {
             if (is_array($val1) && is_array($val2)) {
                 $diff["  $key"] = getDiff($val1, $val2);
-            } elseif (is_array($val1) && !is_array($val2)) {
+            } elseif (is_array($val1)) {
                 $diff["- $key"] = getDiff($val1, $val1);
                 $diff["+ $key"] = $val2;
-            } elseif (!is_array($val1) && is_array($val2)) {
+            } elseif (is_array($val2)) {
                 $diff["- $key"] = $val1;
                 $diff["+ $key"] = getDiff($val2, $val2);
             } else {
@@ -71,7 +59,25 @@ function getDiff(array $data1, array $data2): array
                 $diff["  $key"] = $val1;
             }
         }
+        return $diff;
+    }, []);
+
+    return $result;
+}
+
+/**
+ * @param mixed $val
+ * @return mixed
+ */
+function getValueString($val)
+{
+    if (is_bool($val)) {
+        return $val ? 'true' : 'false';
     }
 
-    return $diff;
+    if ($val === null) {
+        return 'null';
+    }
+
+    return $val;
 }

@@ -13,7 +13,8 @@
             "src/Parsers.php",
             "src/Formaters.php",
             "src/Formaters/Stylish.php",
-            "src/Formaters/Plain.php"
+            "src/Formaters/Plain.php",
+            "src/Formaters/Json.php"
         ]
     },
     "autoload-dev": {
