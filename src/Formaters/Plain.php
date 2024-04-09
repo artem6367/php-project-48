@@ -31,7 +31,7 @@ function helper(array $data, string $parent = ''): array
     $result = array_reduce($keys, function ($acc, $key) use ($data, $parent) {
         $value = $data[$key];
         $reportValue = is_array($value) ? '[complex value]' : $value;
-        $newParent = (empty($parent) ? "{$parent}." : '') . mb_substr($key, 2);
+        $newParent = (!empty($parent) ? "{$parent}." : '') . mb_substr($key, 2);
         if (mb_strpos($key, '- ') === 0) {
             $acc[$newParent] = ['action' => 'removed', 'value' => $reportValue];
         } elseif (mb_strpos($key, '+ ') === 0) {
