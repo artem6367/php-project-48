@@ -7,19 +7,19 @@ function format(array $data): string
     $result = helper($data);
     $keys = array_keys($result);
 
-    $str = array_reduce($keys, function ($str, $key) use ($result) {
+    $str = array_reduce($keys, function ($acc, $key) use ($result) {
         $value = $result[$key];
         $action = $value['action'];
         $newValue = normalize($value['newValue'] ?? $value['value']);
         $oldValue = normalize($value['oldValue'] ?? '');
         if ($action === 'removed') {
-            $str[] = "Property '$key' was removed";
+            $acc[] = "Property '$key' was removed";
         } elseif ($action === 'updated') {
-            $str[] = "Property '$key' was updated. From $oldValue to $newValue";
+            $acc[] = "Property '$key' was updated. From $oldValue to $newValue";
         } else {
-            $str[] = "Property '$key' was added with value: $newValue";
+            $acc[] = "Property '$key' was added with value: $newValue";
         }
-        return $str;
+        return $acc;
     }, []);
 
     return implode(PHP_EOL, $str);
@@ -28,27 +28,27 @@ function format(array $data): string
 function helper(array $data, string $parent = ''): array
 {
     $keys = array_keys($data);
-    $result = array_reduce($keys, function ($result, $key) use ($data, $parent) {
+    $result = array_reduce($keys, function ($acc, $key) use ($data, $parent) {
         $value = $data[$key];
         $reportValue = is_array($value) ? '[complex value]' : $value;
-        $newParent = ($parent ? "{$parent}." : '') . mb_substr($key, 2);
+        $newParent = (empty($parent) ? "{$parent}." : '') . mb_substr($key, 2);
         if (mb_strpos($key, '- ') === 0) {
-            $result[$newParent] = ['action' => 'removed', 'value' => $reportValue];
+            $acc[$newParent] = ['action' => 'removed', 'value' => $reportValue];
         } elseif (mb_strpos($key, '+ ') === 0) {
-            if (array_key_exists($newParent, $result)) {
-                $result[$newParent] = [
+            if (array_key_exists($newParent, $acc)) {
+                $acc[$newParent] = [
                     'action' => 'updated',
-                    'oldValue' => $result[$newParent]['value'],
+                    'oldValue' => $acc[$newParent]['value'],
                     'newValue' => $reportValue,
                 ];
             } else {
-                $result[$newParent] = ['action' => 'added', 'value' => $reportValue];
+                $acc[$newParent] = ['action' => 'added', 'value' => $reportValue];
             }
         }
         if (is_array($value)) {
-            $result = array_merge($result, helper($value, $newParent));
+            $acc = array_merge($acc, helper($value, $newParent));
         }
-        return $result;
+        return $acc;
     }, []);
 
     return $result;
