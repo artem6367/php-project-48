@@ -1,5 +1,5 @@
 {
-    "name": "differ/differ",
+    "name": "hexlet/code",
     "type": "project",
     "scripts": {
         "test": "phpunit tests"
